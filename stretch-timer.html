@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Stretch">
+  <meta name="theme-color" content="#0c1a10">
+  <title>Evening Stretch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c1a10;
+      --surface: rgba(255,255,255,0.04);
+      --surface-hover: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.08);
+      --accent: #c8a96e;
+      --accent-glow: rgba(200,169,110,0.25);
+      --accent-soft: rgba(200,169,110,0.12);
+      --green: #7ec88a;
+      --text: #e8e0d0;
+      --text-dim: rgba(232,224,208,0.55);
+      --text-muted: rgba(232,224,208,0.28);
+      --radius: 18px;
+      --ease: cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html, body { height: 100%; overflow: hidden; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 60%, rgba(80,140,70,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 15%, rgba(200,169,110,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 55% 90%, rgba(80,120,90,0.05) 0%, transparent 50%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* SCREENS */
+    .screen {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 24px 20px;
+      padding: max(24px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+      z-index: 1;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .screen.active { opacity: 1; pointer-events: all; }
+
+    /* HOME */
+    .home-wrap { text-align: center; width: 100%; max-width: 380px; }
+
+    .home-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(44px, 11vw, 72px);
+      font-weight: 300; line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .home-title em { font-style: italic; color: var(--accent); }
+
+    .home-sub {
+      margin-top: 10px;
+      font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-muted);
+    }
+
+    .home-stats {
+      display: flex; justify-content: center; gap: 36px;
+      margin: 36px 0 28px;
+    }
+    .stat-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px; font-weight: 400; color: var(--accent);
+    }
+    .stat-lbl {
+      font-size: 10px; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.12em; margin-top: 2px;
+    }
+
+    .preview-list {
+      width: 100%; max-height: 190px; overflow-y: auto;
+      margin-bottom: 32px;
+    }
+    .preview-list::-webkit-scrollbar { width: 2px; }
+    .preview-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .preview-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 0; border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .preview-row:last-child { border-bottom: none; }
+    .pr-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px; color: var(--text-muted);
+      width: 18px; text-align: right; flex-shrink: 0;
+    }
+    .pr-name { flex: 1; color: var(--text-dim); font-weight: 300; }
+    .pr-dur { font-size: 11px; color: var(--text-muted); }
+
+    /* BUTTONS */
+    .btn-primary {
+      background: var(--accent); color: #0c1a10;
+      border: none; padding: 15px 44px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      border-radius: 100px; cursor: pointer;
+      transition: transform 0.2s var(--ease), box-shadow 0.2s;
+      box-shadow: 0 4px 24px var(--accent-glow);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-primary:hover { transform: scale(1.03); box-shadow: 0 6px 32px var(--accent-glow); }
+    .btn-primary:active { transform: scale(0.97); }
+
+    .btn-ghost {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-dim); padding: 13px 24px;
+      font-family: 'Outfit', sans-serif; font-size: 13px;
+      border-radius: 100px; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-ghost:hover { background: var(--surface-hover); color: var(--text); }
+
+    /* TIMER SCREEN */
+    #s-timer { justify-content: stretch; }
+    .timer-wrap {
+      width: 100%; max-width: 400px; padding: 0 4px;
+      display: flex; flex-direction: column;
+      flex: 1;
+      max-height: 100%;
+    }
+
+    /* top progress bar */
+    .top-bar {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px;
+    }
+    .prog-track {
+      flex: 1; height: 2px;
+      background: var(--border); border-radius: 2px; overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%; background: var(--accent); border-radius: 2px;
+      transition: width 0.6s var(--ease);
+    }
+    .ex-counter { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+    /* card */
+    .ex-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      position: relative; overflow: hidden;
+      min-height: 120px;
+    }
+    .ex-card::after {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.5;
+    }
+    .ex-card.is-rest::after { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+
+    .ex-phase {
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 0.18em; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .ex-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 6.5vw, 36px);
+      font-weight: 400; line-height: 1.1;
+      color: var(--text); margin-bottom: 8px;
+    }
+    .ex-desc {
+      font-size: 12.5px; color: var(--text-dim);
+      line-height: 1.65; font-weight: 300;
+    }
+
+    /* switch sides overlay */
+    .switch-overlay {
+      position: absolute; inset: 0;
+      background: rgba(200,169,110,0.1);
+      border-radius: var(--radius);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 6px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+      backdrop-filter: blur(6px);
+    }
+    .switch-overlay.show { opacity: 1; }
+    .switch-icon { font-size: 28px; }
+    .switch-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px; color: var(--accent);
+    }
+    .switch-sub { font-size: 11px; color: var(--text-dim); letter-spacing: 0.05em; }
+
+    /* ring timer */
+    .ring-wrap {
+      position: relative; width: 148px; height: 148px;
+      margin: 0 auto 10px;
+    }
+    .ring-svg { transform: rotate(-90deg); }
+    .ring-bg { fill: none; stroke: var(--border); stroke-width: 4; }
+    .ring-prog {
+      fill: none; stroke: var(--accent); stroke-width: 4;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s linear, stroke 0.4s;
+    }
+    .ring-prog.rest-ring { stroke: var(--green); }
+    .ring-num {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px; font-weight: 300;
+      color: var(--text); letter-spacing: -0.02em;
+    }
+
+    .timer-meta {
+      text-align: center; margin-bottom: 20px;
+    }
+    .total-remaining {
+      font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em;
+    }
+
+    /* controls */
+    .controls {
+      display: flex; align-items: center;
+      justify-content: center; gap: 14px;
+    }
+    .btn-icon {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-dim);
+      width: 46px; height: 46px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 15px; transition: background 0.2s, color 0.2s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-icon:hover { background: var(--surface-hover); color: var(--text); }
+
+    .btn-play {
+      width: 68px; height: 68px;
+      background: var(--accent); border: none;
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 28px var(--accent-glow);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-play:hover { transform: scale(1.06); }
+    .btn-play:active { transform: scale(0.96); }
+
+    /* COMPLETE */
+    .complete-wrap { text-align: center; }
+    .complete-icon {
+      font-size: 60px; margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .complete-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px; font-weight: 300; color: var(--text);
+    }
+    .complete-sub {
+      font-size: 14px; color: var(--text-dim);
+      margin: 6px 0 36px; font-weight: 300;
+    }
+    .btn-row { display: flex; gap: 12px; justify-content: center; }
+
+    /* mobile width */
+    @media (max-width: 420px) {
+      .screen { padding: 16px 14px; padding: max(16px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
+      .ex-card { padding: 16px 18px; min-height: auto; margin-bottom: 14px; }
+      .ex-name { font-size: clamp(22px, 5.5vw, 30px); }
+      .ex-desc { font-size: 12px; line-height: 1.5; }
+      .ring-wrap { width: 120px; height: 120px; }
+      .ring-num { font-size: 38px; }
+      .ring-svg { width: 120px; height: 120px; }
+      .top-bar { margin-bottom: 12px; }
+      .timer-meta { margin-bottom: 14px; }
+      .btn-play { width: 58px; height: 58px; font-size: 18px; }
+      .btn-icon { width: 40px; height: 40px; font-size: 13px; }
+      .controls { gap: 12px; }
+      .home-stats { gap: 24px; margin: 24px 0 20px; }
+      .preview-list { max-height: 150px; margin-bottom: 24px; }
+    }
+
+    /* short screens (landscape or small phones) */
+    @media (max-height: 680px) {
+      .ex-card { padding: 14px 18px; min-height: auto; margin-bottom: 10px; }
+      .ex-name { font-size: 22px; }
+      .ex-desc { font-size: 11.5px; line-height: 1.45; }
+      .ring-wrap { width: 100px; height: 100px; }
+      .ring-num { font-size: 34px; }
+      .ring-svg { width: 100px; height: 100px; }
+      .top-bar { margin-bottom: 10px; }
+      .timer-meta { margin-bottom: 10px; }
+      .btn-play { width: 54px; height: 54px; font-size: 17px; }
+      .btn-icon { width: 38px; height: 38px; font-size: 12px; }
+      .home-stats { margin: 20px 0 16px; }
+      .preview-list { max-height: 120px; margin-bottom: 20px; }
+    }
+
+    /* very short screens */
+    @media (max-height: 560px) {
+      .ex-card { padding: 10px 14px; margin-bottom: 8px; }
+      .ex-phase { margin-bottom: 2px; }
+      .ex-name { font-size: 20px; margin-bottom: 4px; }
+      .ex-desc { font-size: 11px; }
+      .ring-wrap { width: 80px; height: 80px; }
+      .ring-num { font-size: 28px; }
+      .ring-svg { width: 80px; height: 80px; }
+      .timer-meta { margin-bottom: 8px; }
+      .total-remaining { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="screen active" id="s-home">
+  <div class="home-wrap">
+    <div class="home-title">Evening<br><em>Stretch</em></div>
+    <div class="home-sub">Post-desk session</div>
+
+    <div class="home-stats">
+      <div>
+        <div class="stat-val">10</div>
+        <div class="stat-lbl">Exercises</div>
+      </div>
+      <div>
+        <div class="stat-val" id="stat-min">19</div>
+        <div class="stat-lbl">Minutes</div>
+      </div>
+      <div>
+        <div class="stat-val">9</div>
+        <div class="stat-lbl">Rest breaks</div>
+      </div>
+    </div>
+
+    <div class="preview-list" id="preview-list"></div>
+
+    <button class="btn-primary" onclick="startSession()">Begin Session</button>
+  </div>
+</div>
+
+<!-- TIMER -->
+<div class="screen" id="s-timer">
+  <div class="timer-wrap">
+    <div class="top-bar">
+      <div class="prog-track">
+        <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+      <div class="ex-counter" id="ex-counter">1 / 10</div>
+    </div>
+
+    <div class="ex-card" id="ex-card">
+      <div class="ex-phase" id="ex-phase">Exercise 1 of 10</div>
+      <div class="ex-name" id="ex-name">Cat-Cow</div>
+      <div class="ex-desc" id="ex-desc"></div>
+      <div class="switch-overlay" id="switch-overlay">
+        <div class="switch-icon">🔄</div>
+        <div class="switch-text">Switch Sides</div>
+        <div class="switch-sub">continuing automatically</div>
+      </div>
+    </div>
+
+    <div class="timer-meta">
+      <div class="ring-wrap">
+        <svg class="ring-svg" width="100%" height="100%" viewBox="0 0 148 148" id="ring-svg">
+          <circle class="ring-bg" cx="74" cy="74" r="65"/>
+          <circle class="ring-prog" id="ring-prog" cx="74" cy="74" r="65"
+            stroke-dasharray="408.41" stroke-dashoffset="0"/>
+        </svg>
+        <div class="ring-num" id="ring-num">1:30</div>
+      </div>
+      <div class="total-remaining" id="total-rem">Total remaining: 19:06</div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-icon" onclick="prevEx()" title="Previous">⏮</button>
+      <button class="btn-icon" onclick="restartEx()" title="Restart">↺</button>
+      <button class="btn-play" id="btn-play" onclick="togglePlay()">▶</button>
+      <button class="btn-icon" onclick="skipEx()" title="Skip">⏭</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETE -->
+<div class="screen" id="s-complete">
+  <div class="complete-wrap">
+    <div class="complete-icon">🌿</div>
+    <div class="complete-title">Well done.</div>
+    <div class="complete-sub">19 minutes. Your body will thank you.</div>
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="goHome()">Home</button>
+      <button class="btn-primary" onclick="startSession()">Go again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const EX = [
+  {
+    name: "Cat-Cow",
+    dur: 90,
+    desc: "On all fours. Exhale to round spine (cat), inhale to arch (cow). Slow and controlled — warm up the full spine.",
+    sides: false
+  },
+  {
+    name: "Child's Pose + Arm Reach",
+    dur: 120,
+    desc: "Arms stretched far forward, sink chest toward the floor. Breathe into the lats and armpits. Trains the overhead streamline position for apnea.",
+    sides: false
+  },
+  {
+    name: "Hip Flexor Stretch",
+    dur: 120,
+    desc: "One knee down, other foot forward. Push hips gently forward. Feel the front of the hip. Switch sides at 60s.",
+    sides: true,
+    switchAt: 60
+  },
+  {
+    name: "Standing Forward Fold",
+    dur: 120,
+    desc: "Soft knees to start. Each exhale try to straighten a little more. Feel the hamstrings loading — this is your toe touch work.",
+    sides: false
+  },
+  {
+    name: "Seated Hamstring Stretch",
+    dur: 120,
+    desc: "One leg extended, other folded in. Reach with a flat back first, then let it round toward the foot. Switch sides at 60s.",
+    sides: true,
+    switchAt: 60
+  },
+  {
+    name: "Calf Stretch",
+    dur: 90,
+    desc: "Against a wall. Straight leg (gastrocnemius) first, then bent knee (soleus). Switch sides at 45s.",
+    sides: true,
+    switchAt: 45
+  },
+  {
+    name: "Glute Bridge Hold",
+    dur: 90,
+    desc: "Feet flat, push hips up, squeeze glutes hard at the top. Hold 30s, brief rest, repeat. Counters lower back pain directly.",
+    sides: false
+  },
+  {
+    name: "Lat Doorway Stretch",
+    dur: 120,
+    desc: "Grab doorframe at head height, sit hips back and away. Deep stretch from armpit to hip. Key for the apnea streamline. Switch sides at 60s.",
+    sides: true,
+    switchAt: 60
+  },
+  {
+    name: "Overhead Shoulder Stretch",
+    dur: 90,
+    desc: "Raise arm against wall, inch it higher each breath. Or foam roller under upper back with arms falling overhead. Builds shoulder flexion for streamline.",
+    sides: false
+  },
+  {
+    name: "Chin Tucks + Chest Opener",
+    dur: 90,
+    desc: "10 slow chin tucks (pull chin straight back), then 30s doorway chest stretch each side. Resets forward head posture from desk.",
+    sides: false
+  }
+];
+
+const REST_DUR = 8;
+const CIRC = 2 * Math.PI * 65; // 408.41
+
+// ─── TOTAL TIME ──────────────────────────────────────────────────────────────
+function totalSeconds() {
+  return EX.reduce((s, e) => s + e.dur, 0) + (EX.length - 1) * REST_DUR;
+}
+const TOTAL = totalSeconds(); // ~1122s = 18:42
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let S = {
+  running: false,
+  idx: 0,
+  timeLeft: 0,
+  isRest: false,
+  totalLeft: TOTAL,
+  switchShown: false,
+  iv: null,
+  wl: null
+};
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+(function init() {
+  const list = document.getElementById('preview-list');
+  EX.forEach((e, i) => {
+    const d = document.createElement('div');
+    d.className = 'preview-row';
+    d.innerHTML = `<span class="pr-num">${i+1}</span>
+      <span class="pr-name">${e.name}</span>
+      <span class="pr-dur">${fmt(e.dur)}</span>`;
+    list.appendChild(d);
+  });
+  const m = Math.floor(TOTAL / 60);
+  document.getElementById('stat-min').textContent = m;
+})();
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function fmt(s) {
+  const m = Math.floor(s / 60), sec = s % 60;
+  return `${m}:${String(sec).padStart(2,'0')}`;
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goHome() { stop(); show('s-home'); }
+
+// ─── SESSION CONTROL ─────────────────────────────────────────────────────────
+function startSession() {
+  S.running = false; S.idx = 0; S.isRest = false;
+  S.totalLeft = TOTAL; S.switchShown = false;
+  clearInterval(S.iv);
+  loadEx(0);
+  show('s-timer');
+  lockScreen();
+  setTimeout(() => togglePlay(), 80);
+}
+
+function stop() {
+  clearInterval(S.iv); S.running = false;
+  document.getElementById('btn-play').textContent = '▶';
+  unlockScreen();
+}
+
+// ─── LOAD EXERCISE ───────────────────────────────────────────────────────────
+function loadEx(i) {
+  if (i >= EX.length) { complete(); return; }
+  const e = EX[i];
+  S.idx = i; S.timeLeft = e.dur; S.isRest = false; S.switchShown = false;
+
+  document.getElementById('ex-phase').textContent = `Exercise ${i+1} of ${EX.length}`;
+  document.getElementById('ex-name').textContent = e.name;
+  document.getElementById('ex-desc').textContent = e.desc;
+  document.getElementById('ex-card').classList.remove('is-rest');
+  document.getElementById('switch-overlay').classList.remove('show');
+  document.getElementById('ring-prog').classList.remove('rest-ring');
+  document.getElementById('ex-counter').textContent = `${i+1} / ${EX.length}`;
+  document.getElementById('prog-fill').style.width = `${(i / EX.length) * 100}%`;
+
+  updateRing(e.dur, e.dur);
+  updateDisplay();
+}
+
+function loadRest(nextIdx) {
+  S.isRest = true; S.timeLeft = REST_DUR; S.switchShown = false;
+  const next = EX[nextIdx];
+
+  document.getElementById('ex-phase').textContent = 'Rest';
+  document.getElementById('ex-name').textContent = 'Get Ready';
+  document.getElementById('ex-desc').textContent = `Up next: ${next.name}`;
+  document.getElementById('ex-card').classList.add('is-rest');
+  document.getElementById('switch-overlay').classList.remove('show');
+  document.getElementById('ring-prog').classList.add('rest-ring');
+
+  updateRing(REST_DUR, REST_DUR);
+  updateDisplay();
+}
+
+function complete() {
+  stop();
+  document.getElementById('prog-fill').style.width = '100%';
+  show('s-complete');
+}
+
+// ─── TICK ─────────────────────────────────────────────────────────────────────
+function tick() {
+  if (!S.running) return;
+  S.timeLeft--; S.totalLeft = Math.max(0, S.totalLeft - 1);
+
+  const ex = S.isRest ? null : EX[S.idx];
+  const dur = S.isRest ? REST_DUR : ex.dur;
+
+  // switch sides?
+  if (!S.isRest && ex.sides && !S.switchShown) {
+    const elapsed = ex.dur - S.timeLeft;
+    if (elapsed >= ex.switchAt) triggerSwitch();
+  }
+
+  updateRing(S.timeLeft, dur);
+  updateDisplay();
+
+  if (S.timeLeft <= 0) {
+    playBell(true);
+    if (S.isRest) {
+      loadEx(S.idx);
+    } else {
+      if (S.idx < EX.length - 1) loadRest(S.idx + 1);
+      else complete();
+    }
+  }
+}
+
+function updateDisplay() {
+  document.getElementById('ring-num').textContent = fmt(S.timeLeft);
+  document.getElementById('total-rem').textContent = `Total remaining: ${fmt(S.totalLeft)}`;
+}
+
+function updateRing(current, total) {
+  const offset = total > 0 ? CIRC * (1 - current / total) : 0;
+  document.getElementById('ring-prog').style.strokeDashoffset = offset;
+}
+
+// ─── CONTROLS ────────────────────────────────────────────────────────────────
+function togglePlay() {
+  S.running = !S.running;
+  document.getElementById('btn-play').textContent = S.running ? '⏸' : '▶';
+  if (S.running) {
+    S.iv = setInterval(tick, 1000);
+  } else {
+    clearInterval(S.iv);
+  }
+}
+
+function restartEx() {
+  const wasRunning = S.running;
+  clearInterval(S.iv); S.running = false;
+  S.timeLeft = S.isRest ? REST_DUR : EX[S.idx].dur;
+  S.switchShown = false;
+  document.getElementById('switch-overlay').classList.remove('show');
+  updateRing(S.timeLeft, S.isRest ? REST_DUR : EX[S.idx].dur);
+  updateDisplay();
+  if (wasRunning) { S.running = true; S.iv = setInterval(tick, 1000); }
+}
+
+function skipEx() {
+  const wasRunning = S.running;
+  clearInterval(S.iv); S.running = false;
+  if (S.isRest) {
+    loadEx(S.idx);
+  } else {
+    if (S.idx < EX.length - 1) loadEx(S.idx + 1);
+    else { complete(); return; }
+  }
+  if (wasRunning) { S.running = true; S.iv = setInterval(tick, 1000); }
+}
+
+function prevEx() {
+  const wasRunning = S.running;
+  clearInterval(S.iv); S.running = false;
+  if (S.isRest) {
+    loadEx(S.idx > 0 ? S.idx - 1 : 0);
+  } else if (S.idx > 0) {
+    loadEx(S.idx - 1);
+  } else {
+    loadEx(0);
+  }
+  recalcTotalLeft();
+  if (wasRunning) { S.running = true; S.iv = setInterval(tick, 1000); }
+}
+
+function recalcTotalLeft() {
+  let t = S.timeLeft;
+  for (let i = S.idx + 1; i < EX.length; i++) {
+    t += EX[i].dur + REST_DUR;
+  }
+  S.totalLeft = t;
+  updateDisplay();
+}
+
+// ─── SWITCH SIDES ────────────────────────────────────────────────────────────
+function triggerSwitch() {
+  S.switchShown = true;
+  document.getElementById('switch-overlay').classList.add('show');
+  playBell(false);
+  if (navigator.vibrate) navigator.vibrate([150, 80, 150]);
+  setTimeout(() => {
+    document.getElementById('switch-overlay').classList.remove('show');
+  }, 3000);
+}
+
+// ─── AUDIO (Web Audio API — no files needed) ─────────────────────────────
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playBell(loud) {
+  try {
+    const ctx = getAudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    const t = ctx.currentTime;
+
+    if (loud) {
+      // bright bell: two rising tones for exercise change
+      [523.25, 659.25].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.35, t + i * 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.15 + 0.8);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(t + i * 0.15);
+        osc.stop(t + i * 0.15 + 0.8);
+      });
+    } else {
+      // soft low tone for switch sides
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 330;
+      gain.gain.setValueAtTime(0.2, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.6);
+    }
+  } catch(e) {}
+}
+
+// unlock audio context on first user tap (required on mobile)
+document.addEventListener('click', function unlockAudio() {
+  getAudioCtx().resume();
+  document.removeEventListener('click', unlockAudio);
+}, { once: true });
+
+// ─── WAKE LOCK ───────────────────────────────────────────────────────────────
+async function lockScreen() {
+  try {
+    if ('wakeLock' in navigator)
+      S.wl = await navigator.wakeLock.request('screen');
+  } catch(e) {}
+}
+function unlockScreen() {
+  if (S.wl) { S.wl.release(); S.wl = null; }
+}
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState === 'visible' && S.running) lockScreen();
+});
+
+// ─── PWA MANIFEST ────────────────────────────────────────────────────────────
+const manifest = {
+  name: "Evening Stretch",
+  short_name: "Stretch",
+  start_url: ".",
+  display: "standalone",
+  background_color: "#0c1a10",
+  theme_color: "#0c1a10",
+  icons: [{
+    src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>",
+    sizes: "any", type: "image/svg+xml"
+  }]
+};
+const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+const mLink = document.createElement('link');
+mLink.rel = 'manifest'; mLink.href = URL.createObjectURL(mBlob);
+document.head.appendChild(mLink);
+
+// ─── SERVICE WORKER (offline support) ───────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  const sw = `
+const C='stretch-v1';
+self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['.']))));
+self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
+`;
+  const swBlob = new Blob([sw], { type: 'application/javascript' });
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
+}
+</script>
+</body>
+</html>
