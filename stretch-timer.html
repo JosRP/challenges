@@ -170,6 +170,77 @@
     }
     .ex-counter { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
 
+    /* ring row: strip left, ring right */
+    .ring-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    /* exercise strip (vertical picker) */
+    .ex-strip {
+      flex: 0 0 128px;
+      display: flex; flex-direction: column; gap: 0;
+      overflow-y: auto; overflow-x: hidden;
+      height: 200px;
+      padding: 80px 2px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      mask-image: linear-gradient(to bottom, transparent 0%, #000 28%, #000 72%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 28%, #000 72%, transparent 100%);
+    }
+    .ex-strip::-webkit-scrollbar { display: none; }
+    .ex-chip {
+      flex-shrink: 0;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      opacity: calc(max(1 - var(--dist, 0) * 0.26, 0.12));
+      transform: scale(calc(max(1 - var(--dist, 0) * 0.04, 0.82)));
+      transform-origin: left center;
+      transition: opacity 0.45s var(--ease), transform 0.45s var(--ease), background 0.3s var(--ease), color 0.3s var(--ease);
+    }
+    .ex-chip-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      width: 14px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .ex-chip-name {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ex-chip-dur {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      letter-spacing: 0.05em;
+    }
+    .ex-chip.current {
+      background: var(--accent-soft);
+      color: var(--accent);
+      opacity: 1;
+      transform: scale(1);
+      font-weight: 500;
+    }
+    .ex-chip.current .ex-chip-num,
+    .ex-chip.current .ex-chip-dur { color: var(--accent); opacity: 0.8; }
+
     /* card */
     .ex-card {
       background: var(--surface);
@@ -321,6 +392,8 @@
 
     /* short screens (landscape or small phones) */
     @media (max-height: 680px) {
+      .ex-strip { height: 160px; padding: 60px 2px; }
+      .ring-row { margin-bottom: 12px; }
       .ex-card { padding: 14px 18px; min-height: auto; margin-bottom: 10px; }
       .ex-name { font-size: 22px; }
       .ex-desc { font-size: 11.5px; line-height: 1.45; }
@@ -328,7 +401,7 @@
       .ring-num { font-size: 34px; }
       .ring-svg { width: 100px; height: 100px; }
       .top-bar { margin-bottom: 10px; }
-      .timer-meta { margin-bottom: 10px; }
+      .timer-meta { margin-bottom: 0; }
       .btn-play { width: 54px; height: 54px; font-size: 17px; }
       .btn-icon { width: 38px; height: 38px; font-size: 12px; }
       .home-stats { margin: 20px 0 16px; }
@@ -337,6 +410,9 @@
 
     /* very short screens */
     @media (max-height: 560px) {
+      .ex-strip { height: 130px; padding: 50px 2px; flex: 0 0 112px; }
+      .ex-chip { padding: 4px 10px; font-size: 10.5px; }
+      .ring-row { margin-bottom: 10px; }
       .ex-card { padding: 10px 14px; margin-bottom: 8px; }
       .ex-phase { margin-bottom: 2px; }
       .ex-name { font-size: 20px; margin-bottom: 4px; }
@@ -344,7 +420,7 @@
       .ring-wrap { width: 80px; height: 80px; }
       .ring-num { font-size: 28px; }
       .ring-svg { width: 80px; height: 80px; }
-      .timer-meta { margin-bottom: 8px; }
+      .timer-meta { margin-bottom: 0; }
       .total-remaining { font-size: 10px; }
     }
   </style>
@@ -399,16 +475,19 @@
       </div>
     </div>
 
-    <div class="timer-meta">
-      <div class="ring-wrap">
-        <svg class="ring-svg" width="100%" height="100%" viewBox="0 0 148 148" id="ring-svg">
-          <circle class="ring-bg" cx="74" cy="74" r="65"/>
-          <circle class="ring-prog" id="ring-prog" cx="74" cy="74" r="65"
-            stroke-dasharray="408.41" stroke-dashoffset="0"/>
-        </svg>
-        <div class="ring-num" id="ring-num">1:30</div>
+    <div class="ring-row">
+      <div class="ex-strip" id="ex-strip"></div>
+      <div class="timer-meta">
+        <div class="ring-wrap">
+          <svg class="ring-svg" width="100%" height="100%" viewBox="0 0 148 148" id="ring-svg">
+            <circle class="ring-bg" cx="74" cy="74" r="65"/>
+            <circle class="ring-prog" id="ring-prog" cx="74" cy="74" r="65"
+              stroke-dasharray="408.41" stroke-dashoffset="0"/>
+          </svg>
+          <div class="ring-num" id="ring-num">1:30</div>
+        </div>
+        <div class="total-remaining" id="total-rem">Total remaining: 19:06</div>
       </div>
-      <div class="total-remaining" id="total-rem">Total remaining: 19:06</div>
     </div>
 
     <div class="controls">
@@ -515,6 +594,7 @@ const TOTAL = totalSeconds(); // ~1122s = 18:42
 let S = {
   running: false,
   idx: 0,
+  nextIdx: 0,
   timeLeft: 0,
   isRest: false,
   totalLeft: TOTAL,
@@ -526,6 +606,7 @@ let S = {
 // ─── INIT ────────────────────────────────────────────────────────────────────
 (function init() {
   const list = document.getElementById('preview-list');
+  const strip = document.getElementById('ex-strip');
   EX.forEach((e, i) => {
     const d = document.createElement('div');
     d.className = 'preview-row';
@@ -533,10 +614,29 @@ let S = {
       <span class="pr-name">${e.name}</span>
       <span class="pr-dur">${fmt(e.dur)}</span>`;
     list.appendChild(d);
+
+    const chip = document.createElement('div');
+    chip.className = 'ex-chip';
+    chip.innerHTML = `<span class="ex-chip-num">${i+1}</span>
+      <span class="ex-chip-name">${e.name}</span>
+      <span class="ex-chip-dur">${fmt(e.dur)}</span>`;
+    chip.onclick = () => jumpTo(i);
+    strip.appendChild(chip);
   });
   const m = Math.floor(TOTAL / 60);
   document.getElementById('stat-min').textContent = m;
 })();
+
+function updateStrip(highlightIdx) {
+  const strip = document.getElementById('ex-strip');
+  [...strip.children].forEach((c, i) => {
+    const dist = Math.abs(i - highlightIdx);
+    c.style.setProperty('--dist', dist);
+    c.classList.toggle('current', i === highlightIdx);
+  });
+  const active = strip.children[highlightIdx];
+  if (active) active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 function fmt(s) {
@@ -585,10 +685,12 @@ function loadEx(i) {
 
   updateRing(e.dur, e.dur);
   updateDisplay();
+  updateStrip(i);
 }
 
 function loadRest(nextIdx) {
   S.isRest = true; S.timeLeft = REST_DUR; S.switchShown = false;
+  S.nextIdx = nextIdx;
   const next = EX[nextIdx];
 
   document.getElementById('ex-phase').textContent = 'Rest';
@@ -600,6 +702,7 @@ function loadRest(nextIdx) {
 
   updateRing(REST_DUR, REST_DUR);
   updateDisplay();
+  updateStrip(nextIdx);
 }
 
 function complete() {
@@ -628,7 +731,7 @@ function tick() {
   if (S.timeLeft <= 0) {
     playBell(true);
     if (S.isRest) {
-      loadEx(S.idx);
+      loadEx(S.nextIdx);
     } else {
       if (S.idx < EX.length - 1) loadRest(S.idx + 1);
       else complete();
@@ -673,7 +776,7 @@ function skipEx() {
   const wasRunning = S.running;
   clearInterval(S.iv); S.running = false;
   if (S.isRest) {
-    loadEx(S.idx);
+    loadEx(S.nextIdx);
   } else {
     if (S.idx < EX.length - 1) loadEx(S.idx + 1);
     else { complete(); return; }
@@ -685,7 +788,7 @@ function prevEx() {
   const wasRunning = S.running;
   clearInterval(S.iv); S.running = false;
   if (S.isRest) {
-    loadEx(S.idx > 0 ? S.idx - 1 : 0);
+    loadEx(S.idx);
   } else if (S.idx > 0) {
     loadEx(S.idx - 1);
   } else {
@@ -693,6 +796,16 @@ function prevEx() {
   }
   recalcTotalLeft();
   if (wasRunning) { S.running = true; S.iv = setInterval(tick, 1000); }
+}
+
+function jumpTo(i) {
+  if (i < 0 || i >= EX.length) return;
+  const wasRunning = S.running;
+  clearInterval(S.iv); S.running = false;
+  loadEx(i);
+  recalcTotalLeft();
+  if (wasRunning) { S.running = true; S.iv = setInterval(tick, 1000); }
+  document.getElementById('btn-play').textContent = S.running ? '⏸' : '▶';
 }
 
 function recalcTotalLeft() {
