@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Stretch">
-  <meta name="theme-color" content="#0c1a10">
+  <meta name="theme-color" content="#ffffff">
   <title>Evening Stretch</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -15,17 +15,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0c1a10;
-      --surface: rgba(255,255,255,0.04);
-      --surface-hover: rgba(255,255,255,0.08);
-      --border: rgba(255,255,255,0.08);
-      --accent: #c8a96e;
-      --accent-glow: rgba(200,169,110,0.25);
-      --accent-soft: rgba(200,169,110,0.12);
-      --green: #7ec88a;
-      --text: #e8e0d0;
-      --text-dim: rgba(232,224,208,0.55);
-      --text-muted: rgba(232,224,208,0.28);
+      --bg: #ffffff;
+      --surface: rgba(0,0,0,0.025);
+      --surface-hover: rgba(0,0,0,0.05);
+      --border: rgba(0,0,0,0.1);
+      --accent: #b8975a;
+      --accent-glow: rgba(184,151,90,0.22);
+      --accent-soft: rgba(184,151,90,0.1);
+      --green: #5ba968;
+      --text: #1a1a1a;
+      --text-dim: rgba(26,26,26,0.6);
+      --text-muted: rgba(26,26,26,0.38);
       --radius: 18px;
       --ease: cubic-bezier(0.4,0,0.2,1);
     }
@@ -47,9 +47,9 @@
       content: '';
       position: fixed; inset: 0;
       background:
-        radial-gradient(ellipse at 15% 60%, rgba(80,140,70,0.07) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 15%, rgba(200,169,110,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 55% 90%, rgba(80,120,90,0.05) 0%, transparent 50%);
+        radial-gradient(ellipse at 15% 60%, rgba(184,151,90,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 15%, rgba(91,169,104,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 55% 90%, rgba(184,151,90,0.04) 0%, transparent 50%);
       pointer-events: none; z-index: 0;
     }
 
@@ -121,7 +121,7 @@
 
     /* BUTTONS */
     .btn-primary {
-      background: var(--accent); color: #0c1a10;
+      background: var(--accent); color: #ffffff;
       border: none; padding: 15px 44px;
       font-family: 'Outfit', sans-serif;
       font-size: 13px; font-weight: 600;
@@ -206,7 +206,7 @@
     /* switch sides overlay */
     .switch-overlay {
       position: absolute; inset: 0;
-      background: rgba(200,169,110,0.1);
+      background: rgba(255,255,255,0.85);
       border-radius: var(--radius);
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
@@ -781,8 +781,8 @@ const manifest = {
   short_name: "Stretch",
   start_url: ".",
   display: "standalone",
-  background_color: "#0c1a10",
-  theme_color: "#0c1a10",
+  background_color: "#ffffff",
+  theme_color: "#ffffff",
   icons: [{
     src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>",
     sizes: "any", type: "image/svg+xml"
