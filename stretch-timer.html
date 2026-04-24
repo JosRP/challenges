@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#0f0f10">
   <title>Evening Stretch</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -18,14 +18,14 @@
       --bg: #0f0f10;
       --surface: rgba(255,255,255,0.04);
       --surface-hover: rgba(255,255,255,0.08);
-      --border: rgba(255,255,255,0.1);
-      --accent: #c9a86a;
-      --accent-glow: rgba(201,168,106,0.28);
-      --accent-soft: rgba(201,168,106,0.12);
-      --green: #6fbf7e;
-      --text: #f0eee8;
-      --text-dim: rgba(240,238,232,0.62);
-      --text-muted: rgba(240,238,232,0.4);
+      --border: rgba(255,255,255,0.10);
+      --accent: #a5b4fc;
+      --accent-glow: rgba(165,180,252,0.30);
+      --accent-soft: rgba(165,180,252,0.14);
+      --green: #a7f3d0;
+      --text: #eef0ff;
+      --text-dim: rgba(238,240,255,0.65);
+      --text-muted: rgba(238,240,255,0.42);
       --radius: 18px;
       --ease: cubic-bezier(0.4,0,0.2,1);
     }
@@ -47,9 +47,9 @@
       content: '';
       position: fixed; inset: 0;
       background:
-        radial-gradient(ellipse at 15% 60%, rgba(201,168,106,0.09) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 15%, rgba(111,191,126,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 55% 90%, rgba(201,168,106,0.07) 0%, transparent 50%);
+        radial-gradient(ellipse at 15% 60%, rgba(165,180,252,0.11) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 15%, rgba(196,181,253,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 55% 90%, rgba(167,243,208,0.06) 0%, transparent 50%);
       pointer-events: none; z-index: 0;
     }
 
@@ -72,12 +72,12 @@
     .home-wrap { text-align: center; width: 100%; max-width: 380px; }
 
     .home-title {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Syne', sans-serif;
       font-size: clamp(44px, 11vw, 72px);
       font-weight: 300; line-height: 1;
       letter-spacing: -0.02em;
     }
-    .home-title em { font-style: italic; color: var(--accent); }
+    .home-title em { font-style: normal; color: var(--accent); font-weight: 600; }
 
     .home-sub {
       margin-top: 10px;
@@ -90,8 +90,10 @@
       margin: 36px 0 28px;
     }
     .stat-val {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Outfit', sans-serif;
       font-size: 34px; font-weight: 400; color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.01em;
     }
     .stat-lbl {
       font-size: 10px; color: var(--text-muted);
@@ -112,7 +114,7 @@
     }
     .preview-row:last-child { border-bottom: none; }
     .pr-num {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Syne', sans-serif;
       font-size: 17px; color: var(--text-muted);
       width: 18px; text-align: right; flex-shrink: 0;
     }
@@ -222,7 +224,7 @@
       transition: background 0.3s var(--ease), color 0.3s var(--ease);
     }
     .ex-chip-num {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Syne', sans-serif;
       font-size: 15px;
       color: var(--text-muted);
       width: 20px;
@@ -272,7 +274,7 @@
       letter-spacing: 0.18em; color: var(--text-muted); margin-bottom: 6px;
     }
     .ex-name {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Syne', sans-serif;
       font-size: clamp(26px, 6.5vw, 36px);
       font-weight: 400; line-height: 1.1;
       color: var(--text); margin-bottom: 8px;
@@ -297,7 +299,7 @@
     .switch-overlay.show { opacity: 1; }
     .switch-icon { font-size: 28px; }
     .switch-text {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Syne', sans-serif;
       font-size: 26px; color: var(--accent);
     }
     .switch-sub { font-size: 11px; color: var(--text-dim); letter-spacing: 0.05em; }
@@ -317,9 +319,10 @@
     .ring-num {
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 48px; font-weight: 300;
+      font-family: 'Outfit', sans-serif;
+      font-size: 42px; font-weight: 400;
       color: var(--text); letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
     }
 
     .total-remaining {
@@ -367,7 +370,7 @@
       50% { transform: translateY(-8px); }
     }
     .complete-title {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Syne', sans-serif;
       font-size: 52px; font-weight: 300; color: var(--text);
     }
     .complete-sub {
@@ -793,7 +796,7 @@ function updateRing(current, total) {
 // ─── CONTROLS ────────────────────────────────────────────────────────────────
 function togglePlay() {
   S.running = !S.running;
-  document.getElementById('btn-play').textContent = S.running ? '⏸' : '▶';
+  document.getElementById('btn-play').textContent = S.running ? '❚❚' : '▶';
   if (S.running) {
     S.iv = setInterval(tick, 1000);
     lockScreen();
@@ -846,7 +849,7 @@ function jumpTo(i) {
   loadEx(i);
   recalcTotalLeft();
   if (wasRunning) { S.running = true; S.iv = setInterval(tick, 1000); }
-  document.getElementById('btn-play').textContent = S.running ? '⏸' : '▶';
+  document.getElementById('btn-play').textContent = S.running ? '❚❚' : '▶';
 }
 
 function recalcTotalLeft() {
