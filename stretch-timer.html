@@ -170,52 +170,62 @@
     }
     .ex-counter { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
 
-    /* ring row: strip left, ring right */
-    .ring-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin-bottom: 16px;
+    /* centered middle: ring, total, controls */
+    .timer-center {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 14px;
+      min-height: 0;
     }
 
-    /* exercise strip (vertical picker) */
+    /* exercise strip — bottom wheel picker, full width, 5 rows visible */
     .ex-strip {
-      flex: 0 0 128px;
-      display: flex; flex-direction: column; gap: 0;
+      position: relative;
+      align-self: stretch;
+      display: flex; flex-direction: column;
+      height: 220px;
+      flex-shrink: 0;
       overflow-y: auto; overflow-x: hidden;
-      height: 200px;
-      padding: 80px 2px;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
-      scroll-behavior: smooth;
-      mask-image: linear-gradient(to bottom, transparent 0%, #000 28%, #000 72%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 28%, #000 72%, transparent 100%);
+      scroll-snap-type: y mandatory;
+      overscroll-behavior: contain;
+      mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    }
+    .ex-strip::before, .ex-strip::after {
+      content: '';
+      flex-shrink: 0;
+      height: var(--strip-pad, 88px);
     }
     .ex-strip::-webkit-scrollbar { display: none; }
     .ex-chip {
       flex-shrink: 0;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 11.5px;
+      min-height: 44px;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 14px;
       color: var(--text-dim);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       letter-spacing: 0.02em;
       cursor: pointer;
+      scroll-snap-align: center;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
-      opacity: calc(max(1 - var(--dist, 0) * 0.26, 0.12));
-      transform: scale(calc(max(1 - var(--dist, 0) * 0.04, 0.82)));
-      transform-origin: left center;
-      transition: opacity 0.45s var(--ease), transform 0.45s var(--ease), background 0.3s var(--ease), color 0.3s var(--ease);
+      opacity: max(0.15, 1 - var(--dist, 0) * 0.28);
+      transform: scale(max(0.8, 1 - var(--dist, 0) * 0.06));
+      transform-origin: center;
+      will-change: opacity, transform;
+      transition: background 0.3s var(--ease), color 0.3s var(--ease);
     }
     .ex-chip-num {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 13px;
+      font-size: 15px;
       color: var(--text-muted);
-      width: 14px;
+      width: 20px;
       text-align: right;
       flex-shrink: 0;
     }
@@ -226,7 +236,7 @@
       text-overflow: ellipsis;
     }
     .ex-chip-dur {
-      font-size: 9.5px;
+      font-size: 11px;
       color: var(--text-muted);
       flex-shrink: 0;
       letter-spacing: 0.05em;
@@ -234,8 +244,6 @@
     .ex-chip.current {
       background: var(--accent-soft);
       color: var(--accent);
-      opacity: 1;
-      transform: scale(1);
       font-weight: 500;
     }
     .ex-chip.current .ex-chip-num,
@@ -297,7 +305,6 @@
     /* ring timer */
     .ring-wrap {
       position: relative; width: 148px; height: 148px;
-      margin: 0 auto 10px;
     }
     .ring-svg { transform: rotate(-90deg); }
     .ring-bg { fill: none; stroke: var(--border); stroke-width: 4; }
@@ -315,9 +322,6 @@
       color: var(--text); letter-spacing: -0.02em;
     }
 
-    .timer-meta {
-      text-align: center; margin-bottom: 20px;
-    }
     .total-remaining {
       font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em;
     }
@@ -382,7 +386,6 @@
       .ring-num { font-size: 38px; }
       .ring-svg { width: 120px; height: 120px; }
       .top-bar { margin-bottom: 12px; }
-      .timer-meta { margin-bottom: 14px; }
       .btn-play { width: 58px; height: 58px; font-size: 18px; }
       .btn-icon { width: 40px; height: 40px; font-size: 13px; }
       .controls { gap: 12px; }
@@ -392,8 +395,8 @@
 
     /* short screens (landscape or small phones) */
     @media (max-height: 680px) {
-      .ex-strip { height: 160px; padding: 60px 2px; }
-      .ring-row { margin-bottom: 12px; }
+      .timer-center { gap: 10px; }
+      .ex-strip { height: 190px; --strip-pad: 73px; }
       .ex-card { padding: 14px 18px; min-height: auto; margin-bottom: 10px; }
       .ex-name { font-size: 22px; }
       .ex-desc { font-size: 11.5px; line-height: 1.45; }
@@ -401,7 +404,6 @@
       .ring-num { font-size: 34px; }
       .ring-svg { width: 100px; height: 100px; }
       .top-bar { margin-bottom: 10px; }
-      .timer-meta { margin-bottom: 0; }
       .btn-play { width: 54px; height: 54px; font-size: 17px; }
       .btn-icon { width: 38px; height: 38px; font-size: 12px; }
       .home-stats { margin: 20px 0 16px; }
@@ -410,9 +412,9 @@
 
     /* very short screens */
     @media (max-height: 560px) {
-      .ex-strip { height: 130px; padding: 50px 2px; flex: 0 0 112px; }
-      .ex-chip { padding: 4px 10px; font-size: 10.5px; }
-      .ring-row { margin-bottom: 10px; }
+      .timer-center { gap: 8px; }
+      .ex-strip { height: 160px; --strip-pad: 58px; }
+      .ex-chip { min-height: 36px; padding: 4px 14px; font-size: 12.5px; }
       .ex-card { padding: 10px 14px; margin-bottom: 8px; }
       .ex-phase { margin-bottom: 2px; }
       .ex-name { font-size: 20px; margin-bottom: 4px; }
@@ -420,7 +422,6 @@
       .ring-wrap { width: 80px; height: 80px; }
       .ring-num { font-size: 28px; }
       .ring-svg { width: 80px; height: 80px; }
-      .timer-meta { margin-bottom: 0; }
       .total-remaining { font-size: 10px; }
     }
   </style>
@@ -475,27 +476,25 @@
       </div>
     </div>
 
-    <div class="ring-row">
-      <div class="ex-strip" id="ex-strip"></div>
-      <div class="timer-meta">
-        <div class="ring-wrap">
-          <svg class="ring-svg" width="100%" height="100%" viewBox="0 0 148 148" id="ring-svg">
-            <circle class="ring-bg" cx="74" cy="74" r="65"/>
-            <circle class="ring-prog" id="ring-prog" cx="74" cy="74" r="65"
-              stroke-dasharray="408.41" stroke-dashoffset="0"/>
-          </svg>
-          <div class="ring-num" id="ring-num">1:30</div>
-        </div>
-        <div class="total-remaining" id="total-rem">Total remaining: 19:06</div>
+    <div class="timer-center">
+      <div class="ring-wrap">
+        <svg class="ring-svg" width="100%" height="100%" viewBox="0 0 148 148" id="ring-svg">
+          <circle class="ring-bg" cx="74" cy="74" r="65"/>
+          <circle class="ring-prog" id="ring-prog" cx="74" cy="74" r="65"
+            stroke-dasharray="408.41" stroke-dashoffset="0"/>
+        </svg>
+        <div class="ring-num" id="ring-num">1:30</div>
+      </div>
+      <div class="total-remaining" id="total-rem">Total remaining: 19:06</div>
+      <div class="controls">
+        <button class="btn-icon" onclick="prevEx()" title="Previous">⏮</button>
+        <button class="btn-icon" onclick="restartEx()" title="Restart">↺</button>
+        <button class="btn-play" id="btn-play" onclick="togglePlay()">▶</button>
+        <button class="btn-icon" onclick="skipEx()" title="Skip">⏭</button>
       </div>
     </div>
 
-    <div class="controls">
-      <button class="btn-icon" onclick="prevEx()" title="Previous">⏮</button>
-      <button class="btn-icon" onclick="restartEx()" title="Restart">↺</button>
-      <button class="btn-play" id="btn-play" onclick="togglePlay()">▶</button>
-      <button class="btn-icon" onclick="skipEx()" title="Skip">⏭</button>
-    </div>
+    <div class="ex-strip" id="ex-strip"></div>
   </div>
 </div>
 
@@ -623,19 +622,58 @@ let S = {
     chip.onclick = () => jumpTo(i);
     strip.appendChild(chip);
   });
+  strip.addEventListener('scroll', () => {
+    requestAnimationFrame(updateScrollFocus);
+  });
+  adjustStripPadding();
+  updateScrollFocus();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => { adjustStripPadding(); updateScrollFocus(); });
+  }
+  window.addEventListener('resize', () => {
+    adjustStripPadding();
+    updateStrip(S.idx);
+  });
   const m = Math.floor(TOTAL / 60);
   document.getElementById('stat-min').textContent = m;
 })();
 
-function updateStrip(highlightIdx) {
+function adjustStripPadding() {
+  const strip = document.getElementById('ex-strip');
+  if (!strip.children.length) return;
+  const stripH = strip.clientHeight;
+  if (!stripH) return;
+  const chipH = strip.children[0].clientHeight || 44;
+  const pad = Math.max(40, (stripH - chipH) / 2);
+  strip.style.setProperty('--strip-pad', pad + 'px');
+}
+
+function updateStrip(currentIdx) {
   const strip = document.getElementById('ex-strip');
   [...strip.children].forEach((c, i) => {
-    const dist = Math.abs(i - highlightIdx);
-    c.style.setProperty('--dist', dist);
-    c.classList.toggle('current', i === highlightIdx);
+    c.classList.toggle('current', i === currentIdx);
   });
-  const active = strip.children[highlightIdx];
-  if (active) active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const active = strip.children[currentIdx];
+  if (active) {
+    const target = active.offsetTop - (strip.clientHeight - active.clientHeight) / 2;
+    strip.scrollTo({ top: target, behavior: 'smooth' });
+  }
+  updateScrollFocus();
+}
+
+function updateScrollFocus() {
+  const strip = document.getElementById('ex-strip');
+  if (!strip.children.length) return;
+  const stripH = strip.clientHeight;
+  if (!stripH) return;
+  const center = strip.scrollTop + stripH / 2;
+  [...strip.children].forEach(c => {
+    const chipH = c.clientHeight;
+    if (!chipH) return;
+    const chipCenter = c.offsetTop + chipH / 2;
+    const dist = Math.abs(chipCenter - center) / chipH;
+    c.style.setProperty('--dist', dist);
+  });
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -656,10 +694,13 @@ function startSession() {
   S.running = false; S.idx = 0; S.isRest = false;
   S.totalLeft = TOTAL; S.switchShown = false;
   clearInterval(S.iv);
-  loadEx(0);
   show('s-timer');
-  lockScreen();
-  setTimeout(() => togglePlay(), 80);
+  requestAnimationFrame(() => {
+    adjustStripPadding();
+    loadEx(0);
+    lockScreen();
+    setTimeout(() => togglePlay(), 80);
+  });
 }
 
 function stop() {
