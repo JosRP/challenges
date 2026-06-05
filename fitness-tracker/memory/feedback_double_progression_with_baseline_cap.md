@@ -5,7 +5,7 @@ metadata:
   type: feedback
 ---
 
-Jose's preferred progression methodology is **double progression** within a 10-15 rep range: start at 10 reps with a given weight, add reps session to session until 15 clean reps on all 3 sets, then bump weight 2.5kg and drop back to 10. Standardized 3 sets across all exercises for cognitive simplicity (only weight and reps vary).
+Jose's preferred progression methodology is **double progression** within a 10-15 rep range: start at 10 reps with a given weight, add reps session to session until 15 clean reps on all 3 sets, then bump weight 2.5kg and drop back to 10. Standardized **3 sets across every weighted exercise** for cognitive simplicity (only weight and reps vary). Cardio (treadmill walking, recumbent bike) is the only exception — those are time / distance / level, not sets x reps. When Jose reports a single rep number (e.g. "chest press 65 x 12"), assume he means **the lowest set across 3** (see rep-logging rule in [[excel-source-of-truth]]); when he reports a per-set breakdown like "15-14-12", the bump trigger looks at all three values (need all three at 15 clean to advance, not just the top set).
 
 **Why:** Jose validated this as his preferred system on 2026-05-28 (he proposed it himself, refining the simpler "hold reps in a band" approach). Double progression auto-regulates by demanding earned rep capacity before weight increases, which is mechanically safer than pure weight progression. Single-variable-change-per-session reduces ambiguity in reading body feedback.
 
