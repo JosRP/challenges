@@ -6,6 +6,8 @@
 - [SLR self-test improvement is not clinical clearance](feedback_slr_self_test_not_clearance.md) - encouraging signal to bring to next consult, not self-authorization to push past caps
 - [Emotional setback cascade pattern](feedback_emotional_setback_cascade_pattern.md) - binge gaming + sitting + late bed + missed gym; focus advice on sitting (disc-relevant), name cascade early
 - [Skip gym before doctor consult](feedback_skip_gym_before_doctor_consult.md) - one missed session for clean baseline data is the right trade
+- [No couch sleep, disc rule](feedback_no_couch_sleep_disc_rule.md) - couch napping is a distinct mechanical failure mode; never during recovery, never before gym, pre-loads spine in splint pattern
+- [Medical claims require sources](feedback_medical_claims_require_sources.md) - cite specific studies or mark as interpretive; hallucinated citations are the worst possible failure mode on this sensitive topic
 
 ## Projects (in-flight work)
 - [L5-S1 recovery 2026](project_l5_s1_recovery_2026.md) - dominant project shaping all training, ergonomics, and routine through Q3 2026; ~80% conservative resolution prognosis
@@ -14,3 +16,4 @@
 ## Reference (external systems and pointers)
 - [Medical contacts](reference_medical_contacts.md) - Dr. Almeida (Physiatrist), Dra. Ribeiro (Neuroradiologist), family doctor, Hospital da Luz, Caldas de Sao Jorge
 - [Excel source of truth](reference_excel_source_of_truth.md) - Growth V3.xlsx is canonical, fitness.py is read-only/import-only; log working-set capacity not deload reps
+- [Disc imaging evidence base](reference_disc_imaging_evidence_base.md) - landmark citations for imaging-symptom decoupling, herniation regression rates, Pfirrmann grading, Panjabi stability model; cite these instead of paraphrasing from memory
