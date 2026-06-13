@@ -28,11 +28,12 @@ Active recovery from right lateral L5-S1 disc herniation with S1 nerve root invo
   - Action: restarted Airtal with the doctor's blessing. Walking the only positive recommendation he engaged with (conservative-medicine default floor, not a ceiling on the rest of the plan).
   - Style note: clinical-but-cold delivery, similar to Almeida. Triggered an emotional cascade ([[emotional-setback-cascade-pattern]]); manage warmth-need separately from medical decision-making.
 - **Upcoming checkpoints:**
-  - Monday 2026-06-15 morning: Dr. Almeida consult (the key medical checkpoint). Will use SLR improvement, the documented toe-walk finding, and the flare timeline as evidence for next-stage clearance decisions.
-  - Monday 2026-06-15 afternoon: therapist (nervous-system lead voice; valuable on the same day as Almeida so the emotional consult follows the medical one).
-  - Monday + Wednesday week of 2026-06-15: thermal at Caldas.
+  - Monday 2026-06-15: thermal at Caldas (no doctor consults this day).
+  - Wednesday 2026-06-17: thermal at Caldas.
   - Thursday 2026-06-18 to Sunday 2026-06-21: Viseu trip (parents + childhood friends). Bus preferred over driving (right-S1 affects accelerator/brake foot). Pack light, wheeled bag, accept luggage help.
-  - Friday 2026-06-19: family doctor (SNS) appointment. Repurposing the originally-scheduled P1 collection slot to also discuss baseline blood work and to mention the vasectomy intent (the vasectomy itself will likely wait until the disc is well-settled; raising it so it's on the GP's radar).
+  - Friday 2026-06-19: family doctor (SNS) appointment in Viseu. Repurposing the originally-scheduled P1 collection slot to also discuss baseline blood work and to mention the vasectomy intent (the vasectomy itself will likely wait until the disc is well-settled; raising it so it's on the GP's radar).
+  - Monday 2026-06-22 morning: Dr. Almeida consult (the key medical checkpoint). Will use SLR improvement, the documented toe-walk finding, and the flare timeline as evidence for next-stage clearance decisions.
+  - Monday 2026-06-22 afternoon: therapist (nervous-system lead voice; valuable on the same day as Almeida so the emotional consult follows the medical one).
 - **Active recovery metric:** right-foot toe walk asymmetry. Repeat every 1-2 weeks. Shrinking asymmetry = objective evidence the S1 root is de-irritating.
 
 **Lessons from the 2026-06-10 flare (rules going forward):**
